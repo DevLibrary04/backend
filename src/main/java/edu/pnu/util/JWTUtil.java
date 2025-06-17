@@ -11,11 +11,13 @@ public class JWTUtil {
 	private static final String claimName = "username";
 	private static final String prefix = "Bearer ";
 	
+	// prefix 뺴고 클린 업
 	private static String getJWTSource(String token) {
 		if(token.startsWith(prefix)) return token.replace("Bearer ", "");
 		return token;
 	}
 	
+	// JWT 생성
 	public static String getJWT(String username) {
 		String src = JWT.create()
 				.withClaim(claimName, username)
@@ -26,7 +28,7 @@ public class JWTUtil {
 		
 	}
 	
-	// authorize 된 토큰으로부터 username 받아옴
+	// authorize 된 토큰으로부터 key가 username인 데이터 가져오기
 	public static String getClaim(String token, String claimName) {
 		String tok = getJWTSource(token);
 		return JWT.require(Algorithm.HMAC256(JWT_KEY))
@@ -36,6 +38,7 @@ public class JWTUtil {
 				.asString();
 	}
 	
+	// 만료기간 검증 - 만료되지 않았다면 true 반환
 	public static boolean isExpired(String token) {
 		String tok = getJWTSource(token);
 		return JWT.require(Algorithm.HMAC256(JWT_KEY)).build().verify(tok).getExpiresAt().before(new Date());
