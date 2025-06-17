@@ -38,22 +38,5 @@ public class HistoryInit {
                     .build());
      
     }
-    
-//    @Test
-//    public void historyInit() {
-//
-//    	// 2) 저장 전 count
-//    	long before = historyRepo.count();
-//    	
-//    	// 3) 새 History 생성·저장 (ID는 자동 생성되도록)
-//    	History h = History.builder()
-//    			.query("테스트키워드")
-//    			.timestamp(LocalDateTime.now())
-//    			.member(m)
-//    			.build();
-//    	historyRepo.save(h);
-//    	
-//    	// 4) 저장 후 count가 +1 됐는지 검증
-//    	assertThat(historyRepo.count()).isEqualTo(before + 1);
-//    }
+
 }
