@@ -17,52 +17,41 @@ import edu.pnu.persistence.MemberRepository;
 public class HistoryService {
 
     @Autowired
-    private HistoryRepository historyRepo;
-    
+    private HistoryRepository historyRepository;
 
-    @Autowired
-    private MemberRepository memberRepo;
-
-    public void recordSearch(String username, HistoryDTO h) {
-        Member member = memberRepo.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("사용자 없음: " + username));
-
-        
-        History history = History.builder()
-        	    .member(member)
-        	    .query(h.getQuery())
-        	    .build();
-
-        	List<Result> resultEntities = h.getResults().stream()
-        	    .map(dto -> {
-        	        Result r = new Result();
-        	        r.setTitle(dto.getTitle());
-        	        r.setOriginallink(dto.getOriginallink());
-        	        r.setDescription(dto.getDescription());
-        	        r.setLink(dto.getLink());
-        	        r.setPubDate(dto.getPubDate());
-        	        r.setHistory(history);
-        	        return r;
-        	    }).collect(Collectors.toList());
-
-        	history.setResults(resultEntities);
-        	historyRepo.save(history);
-        
-        
-        
-        
-        //리스트에 있는 dto 다 db에 올리기
-        
-//        History history = History.builder()
-//                .member(member)
-//                .query(h.getQuery())
-//                .results(h.getResults())
-//                .build();
-//
-//        historyRepo.save(history);
+    public HistoryService(HistoryRepository historyRepository) {
+    	this.historyRepository = historyRepository;
     }
     
-    public List<History> getHistory(String username) {
-    	return historyRepo.findByMemberUsername(username);
+    @Transactional
+    public void saveHistoryWithResults(HistoryDTO h, Member m) {
+    	
+    	History history = new History();
+    	history.setQuery(h.getQuery());
+    	
+    	// timestamp 내용
+    	
+    	List<Result> results = new ArrayList<>();
+    	
+    	
+    	List<ResultDTO> resultDTO = h.getResults();
+    	
+    	if(resultDTO != null) {
+    		for (ResultDTO r : resultDTO) {
+    			Result result = new Result();
+    			result.setTitle(r.getTitle());
+    			result.setOriginallink(r.getOriginallink());
+    			result.setDescription(r.getDescription());
+    			result.setLink(r.getLink());
+    			result.setPubDate(r.getPubDate());
+    			
+    			results.add(result);
+    		}
+    	}
+    	
+    	
+    	history.setResults(results);
+    	
+    	historyRepository.save(history);
     }
 }
