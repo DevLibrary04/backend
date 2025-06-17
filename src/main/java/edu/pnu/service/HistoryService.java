@@ -1,7 +1,7 @@
 package edu.pnu.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,8 +10,9 @@ import edu.pnu.domain.History;
 import edu.pnu.domain.Member;
 import edu.pnu.domain.Result;
 import edu.pnu.dto.HistoryDTO;
+import edu.pnu.dto.ResultDTO;
 import edu.pnu.persistence.HistoryRepository;
-import edu.pnu.persistence.MemberRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class HistoryService {
